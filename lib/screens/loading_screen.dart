@@ -21,8 +21,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   void geoLocatorData() async {
     Location location = Location();
-    await location.getCurrentLocation();
-    LocationWeather locationWeather = LocationWeather(location);
+    List val = await location.getCurrentLocation();
+    LocationWeather locationWeather = LocationWeather(val);
     var weatherData = await locationWeather.locationWeatherData();
 
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
