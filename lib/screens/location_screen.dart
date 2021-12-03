@@ -17,14 +17,14 @@ class LocationScreen extends StatefulWidget {
 
 class _LocationScreenState extends State<LocationScreen> {
   WeatherModel weather = WeatherModel();
-  int temp;
+  dynamic temp;
   String weatherIcon;
   String weatherMessage;
   String cityName;
   String weatherCondition;
-  double wind;
-  int humidity;
+  dynamic humidity;
   String home;
+  dynamic wind;
 
   @override
   void initState() {
@@ -34,16 +34,15 @@ class _LocationScreenState extends State<LocationScreen> {
 
   void updateUI(weatherData) {
     setState(() {
-      double localtemp = weatherData['main']['temp'];
+      dynamic localtemp = weatherData['main']['temp'];
       temp = localtemp.toInt();
       var condition = weatherData['weather'][0]['id'];
-      int dt = weatherData['dt'];
-      int sunset = weatherData['sys']['sunset'];
-      int sunrise = weatherData['sys']['sunrise'];
+      dynamic dt = weatherData['dt'];
+      dynamic sunset = weatherData['sys']['sunset'];
+      dynamic sunrise = weatherData['sys']['sunrise'];
       home = backgroundImage(dt, sunset, sunrise);
       weatherIcon = weather.getWeatherImg(condition, dt, sunset, sunrise);
       weatherCondition = weatherData['weather'][0]['main'];
-      weatherMessage = weather.getMessage(temp);
       cityName = weatherData['name'];
       wind = weatherData['wind']['speed'];
       humidity = weatherData['main']['humidity'];

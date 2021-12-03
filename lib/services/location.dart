@@ -10,8 +10,8 @@ class Location {
       latitude = position.latitude;
       longitude = position.longitude;
     } catch (e) {
-      latitude = 22.5726;
-      longitude = 88.3639;
+      latitude = 21.1458;
+      longitude = 79.0882;
     }
     List<dynamic> val = [latitude, longitude];
     return val;
