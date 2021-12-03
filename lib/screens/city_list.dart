@@ -48,7 +48,7 @@ class _CityListPageState extends State<CityListPage> {
           image: AssetImage(home),
           fit: BoxFit.cover,
           colorFilter:
-              ColorFilter.mode(Colors.black.withOpacity(0.1), BlendMode.darken),
+              ColorFilter.mode(Colors.black.withOpacity(0.4), BlendMode.darken),
         ),
       ),
       child: Scaffold(
@@ -77,14 +77,14 @@ class _CityListPageState extends State<CityListPage> {
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
                         return Card(
-                          color: Colors.white54,
-                          shadowColor: Colors.black,
+                          color: Colors.black12,
+                          // shadowColor: Colors.black,
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                          elevation: 5,
+                              borderRadius: BorderRadius.circular(7)),
+                          elevation: 2,
                           margin: EdgeInsets.all(5),
                           child: Container(
-                            padding: EdgeInsets.all(10),
+                            padding: EdgeInsets.all(15),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -95,7 +95,7 @@ class _CityListPageState extends State<CityListPage> {
                                       memory[index],
                                       style: TextStyle(
                                         color: Colors.white,
-                                        fontSize: 20,
+                                        fontSize: 24,
                                         fontWeight: FontWeight.bold,
                                         fontFamily: 'Cabin',
                                       ),
@@ -114,15 +114,15 @@ class _CityListPageState extends State<CityListPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "wind :- 120",
+                                      "wind",
                                       style: TextStyle(
                                         color: Colors.white,
-                                        fontSize: 20,
+                                        fontSize: 24,
                                         fontFamily: 'Cabin',
                                       ),
                                     ),
                                     Text(
-                                      'temp :- 100°c',
+                                      '120',
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 20,

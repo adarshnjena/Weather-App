@@ -58,7 +58,7 @@ class _LocationScreenState extends State<LocationScreen> {
           image: AssetImage(home),
           fit: BoxFit.cover,
           colorFilter:
-              ColorFilter.mode(Colors.black.withOpacity(0.1), BlendMode.darken),
+              ColorFilter.mode(Colors.black.withOpacity(0.3), BlendMode.darken),
         ),
       ),
       child: Scaffold(
@@ -141,11 +141,11 @@ class _LocationScreenState extends State<LocationScreen> {
                 Expanded(
                   flex: 2,
                   child: Card(
-                    color: Colors.white54,
+                    color: Colors.white12,
                     shadowColor: Colors.black,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30)),
-                    elevation: 5,
+                    elevation: 10,
                     margin: EdgeInsets.fromLTRB(10, 20, 10, 30),
                     child: Container(
                       padding: EdgeInsets.all(20),

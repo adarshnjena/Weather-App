@@ -1,9 +1,9 @@
 String backgroundImage(int dt, int sunset, int sunrise) {
   String home;
   if (dt < sunset && dt > sunrise) {
-    home = 'images/Home-Day.png';
+    home = 'images/Home-Day.jpg';
   } else {
-    home = 'images/Home-Night.png';
+    home = 'images/Home-Night.jpg';
   }
   return home;
 }

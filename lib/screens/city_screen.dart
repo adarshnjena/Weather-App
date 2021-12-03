@@ -25,7 +25,7 @@ class _CityScreenState extends State<CityScreen> {
           image: AssetImage(home),
           fit: BoxFit.cover,
           colorFilter:
-              ColorFilter.mode(Colors.black.withOpacity(0.1), BlendMode.darken),
+              ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.darken),
         ),
       ),
       child: Scaffold(
