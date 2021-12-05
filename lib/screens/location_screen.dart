@@ -1,11 +1,11 @@
 import 'package:clima/screens/city_screen.dart';
+import 'package:clima/screens/listLoding.dart';
+import 'package:clima/services/List.dart';
 import 'package:clima/services/networking.dart';
 import 'package:flutter/material.dart';
 import 'package:clima/services/weather.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
-
-import 'city_list.dart';
 
 class LocationScreen extends StatefulWidget {
   LocationScreen({this.locationWeather});
@@ -112,8 +112,9 @@ class _LocationScreenState extends State<LocationScreen> {
                       onPressed: () {
                         Navigator.push(context, MaterialPageRoute(
                           builder: (context) {
-                            return CityListPage(
+                            return ListLoadingScreen(
                               home: home,
+                              listMemory: memory,
                             );
                           },
                         ));

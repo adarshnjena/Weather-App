@@ -1,47 +1,41 @@
+import 'package:clima/screens/listLoding.dart';
+import 'package:clima/screens/list_item_Widget.dart';
+import 'package:clima/services/networking.dart';
 import 'package:flutter/material.dart';
+import 'package:clima/services/List.dart';
 
 class CityListPage extends StatefulWidget {
   final String home;
-  CityListPage({this.home});
+  final List<ValueData> valueData;
+  final listMemory;
+  CityListPage({this.home, this.valueData, this.listMemory});
   @override
   _CityListPageState createState() => _CityListPageState();
 }
 
 class _CityListPageState extends State<CityListPage> {
+  TextEditingController controller;
+
   String home;
 
-  List memory = [
-    'Delhi',
-    'Mumbai',
-    'London',
-    'Dubai',
-    'Nagpur',
-    'Delhi',
-    'Mumbai',
-    'London',
-    'Dubai',
-    'Nagpur'
-  ];
-  void addCity(String newCity) {
-    if (memory.length < 5) {
-      memory.add(newCity);
-    }
-  }
-
-  void removeCity(int index) {
-    if (memory.indexOf(index) != null) {
-      memory.removeAt(index);
-    }
-  }
+  GlobalKey<AnimatedListState> animatedListKey = GlobalKey<AnimatedListState>();
 
   @override
   void initState() {
     super.initState();
     home = widget.home;
+    controller = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    List listMemory = widget.listMemory;
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
@@ -72,88 +66,157 @@ class _CityListPageState extends State<CityListPage> {
                     SizedBox(
                       height: 50,
                     ),
-                    ListView.builder(
+                    AnimatedList(
+                      key: animatedListKey,
                       physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        return Card(
-                          color: Colors.black12,
-                          // shadowColor: Colors.black,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(7)),
-                          elevation: 2,
-                          margin: EdgeInsets.all(5),
-                          child: Container(
-                            padding: EdgeInsets.all(15),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      memory[index],
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold,
-                                        fontFamily: 'Cabin',
-                                      ),
+                      initialItemCount: memory.length,
+                      itemBuilder: (context, index, animation) {
+                        return SizeTransition(
+                          sizeFactor: animation,
+                          child: GestureDetector(
+                            onDoubleTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  backgroundColor: Colors.black,
+                                  title: Text(
+                                    'Do you want to delete ${widget.listMemory[index]}?',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontFamily: 'Nunito',
                                     ),
-                                    Text(
-                                      '100°c',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 20,
-                                        fontFamily: 'Nunito',
-                                      ),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        if (widget.listMemory.indexOf(index) !=
+                                            null) {
+                                          widget.listMemory.removeAt(index);
+                                          animatedListKey.currentState
+                                              .removeItem(index,
+                                                  (context, animation) => null);
+                                        }
+                                        Navigator.of(context)
+                                            .pop(controller.text);
+                                      },
+                                      child: Text('Yes'),
                                     ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context)
+                                            .pop(controller.text);
+                                      },
+                                      child: Text('No'),
+                                    )
                                   ],
                                 ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "wind",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 24,
-                                        fontFamily: 'Cabin',
-                                      ),
-                                    ),
-                                    Text(
-                                      '120',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 20,
-                                        fontFamily: 'Nunito',
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Image(
-                                  image: AssetImage('images/Day Sun.png'),
-                                  height: 50,
-                                ),
-                                TextButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        memory.removeAt(index);
-                                      });
-                                    },
-                                    child: Icon(Icons.delete))
-                              ],
+                              );
+                            },
+                            child: ListItemWidget(
+                              cityName: listMemory[index],
+                              temp: widget.valueData[index].temp,
+                              wind: widget.valueData[index].wind,
+                              weatherIcon: widget.valueData[index].weatherIcon,
                             ),
                           ),
                         );
                       },
-                      itemCount: memory.length,
                     ),
                   ],
                 ),
               )),
         ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            final name = await openDialog();
+            bool check = await CityCheck(name).getbool();
+            if (check) {
+              listMemory.add(name);
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) {
+                return ListLoadingScreen(
+                  home: widget.home,
+                  listMemory: listMemory,
+                );
+              }));
+
+              if (animatedListKey.currentState != null) {
+                animatedListKey.currentState.insertItem(0);
+              }
+            }
+          },
+          backgroundColor: Colors.white,
+          child: Icon(
+            Icons.add,
+            color: Colors.black,
+            size: 40,
+          ),
+        ),
       ),
     );
   }
+
+  Future<String> openDialog() => showDialog<String>(
+        context: context,
+        builder: (context) => AlertDialog(
+          actionsPadding: EdgeInsets.only(right: 30, top: 10),
+          titlePadding: EdgeInsets.all(30),
+          contentPadding: EdgeInsets.only(right: 30, left: 30),
+          backgroundColor: Colors.black,
+          title: Text(
+            'Add the city Name',
+            style: TextStyle(color: Colors.white),
+          ),
+          content: TextField(
+            autofocus: true,
+            autocorrect: true,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontFamily: 'Nunito',
+            ),
+            decoration: InputDecoration(
+              prefixIcon: Icon(Icons.search),
+              filled: true,
+              fillColor: Colors.white10,
+              labelText: 'City Name',
+              labelStyle: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontFamily: 'Nunito',
+              ),
+              hintText: 'Enter the City',
+              border: OutlineInputBorder(
+                borderSide: BorderSide.none,
+                borderRadius: BorderRadius.circular(15),
+              ),
+            ),
+            controller: controller,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop(controller.text);
+              },
+              child: Text(
+                'Submit',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontFamily: 'Nunito',
+                ),
+              ),
+            )
+          ],
+        ),
+      );
+
+  // void removeCity(int index) {
+  //   if (widget.listMemory.indexOf(index) != null) {
+  //     widget.listMemory.removeAt(index);
+  //     animatedListKey.currentState
+  //         .removeItem(index, (context, animation) => null);
+  //   }
+  // }
 }

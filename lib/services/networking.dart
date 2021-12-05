@@ -30,3 +30,16 @@ class CityWeather {
     }
   }
 }
+
+class CityCheck {
+  final String cityName;
+  CityCheck(this.cityName);
+  Future<bool> getbool() async {
+    String url = '$link?q=$cityName&appid=$apiKey&units=metric';
+    http.Response response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      return true;
+    }
+    return false;
+  }
+}
